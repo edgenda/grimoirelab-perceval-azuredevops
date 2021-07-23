@@ -1,14 +1,11 @@
 import logging
 
-import traceback
 from grimoirelab_toolkit.datetime import str_to_datetime
-from grimoirelab_toolkit.uris import urijoin
 
 from ...backend import (Backend,
                         BackendCommand,
-                        BackendCommandArgumentParser,
-                        DEFAULT_SEARCH_FIELD)
-from ...client import HttpClient, RateLimitHandler
+                        BackendCommandArgumentParser)
+from ...client import HttpClient
 from ...utils import DEFAULT_DATETIME
 
 from azure.devops.credentials import BasicAuthentication
@@ -23,7 +20,7 @@ DEFAULT_SLEEP_TIME = 1
 MAX_RETRIES = 5
 
 CATEGORY_PROJECT = "project"
-CATEGORY_WORKITEMS= "workitems"
+CATEGORY_WORKITEMS = "workitems"
 
 logger = logging.getLogger(__name__)
 
@@ -100,7 +97,7 @@ class AzureBoard(Backend):
             items = self.__fetch_projects()
         if category == CATEGORY_WORKITEMS:
             items = self.__fetch_workitems(self.project, from_date)
-        
+
         logger.info("Fetch process completed")
         return items
 
@@ -157,13 +154,13 @@ class AzureBoard(Backend):
             category = CATEGORY_PROJECT
         else:
             category = CATEGORY_WORKITEMS
-        
+
         return category
 
     def _init_client(self, from_archive=False):
         """Init client"""
         return AzureBoardClient(self.origin, self.personal_access_token, self.project)
-    
+
     def __fetch_projects(self):
         """Fetch the projects"""
         for project in self.client.projects():
@@ -175,11 +172,12 @@ class AzureBoard(Backend):
         for workitem in workitems:
             yield workitem.as_dict()
 
+
 class AzureBoardClient(HttpClient):
     def __init__(self, origin, personal_access_token, project=None):
-        
+
         self.credentials = BasicAuthentication('', personal_access_token)
-        self.connection  = Connection(base_url=origin, creds=self.credentials)
+        self.connection = Connection(base_url=origin, creds=self.credentials)
         self.project = project
 
         super().__init__(origin)
@@ -200,12 +198,11 @@ class AzureBoardClient(HttpClient):
     def workitems(self, project=None, from_date=None):
         """Fetch the work items from azure devops for a project"""
         wit_client = self.connection.clients.get_work_item_tracking_client()
-        if from_date != None:
+        if from_date is not None:
             date_param = f"""where [System.CreatedDate] >= '{from_date}'"""
         else:
             date_param = ""
-        wiql = Wiql(
-            query=f'''
+        wiql = Wiql(query=f'''
 select [System.Id],
 [System.WorkItemType],
 [System.Title],
@@ -214,12 +211,12 @@ select [System.Id],
 [System.IterationPath],
 [System.Tags],
 [System.TeamProject]
-from WorkItems 
-{date_param} 
+from WorkItems
+{date_param}
 order by [System.Id] desc'''
-            )
-              
-        if project == None:
+                    )
+
+        if project is not None:
             wiql_results = wit_client.query_by_wiql(wiql).work_items
         else:
             team_context = TeamContext(project=project)
@@ -227,6 +224,7 @@ order by [System.Id] desc'''
         if wiql_results is not None:
             for work_item in wiql_results:
                 yield wit_client.get_work_item(int(work_item.id))
+
 
 class AzureBoardCommand(BackendCommand):
     """Class to run AzureBoard backend from the command line."""
