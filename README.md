@@ -41,7 +41,7 @@ $ pip3 install -e .
 ### Azure Devops
 
 ```
-$ perceval azuredevops
+$ perceval azureboard $projectURL $PersonnalAccessToken
 ```
 
 ## License
