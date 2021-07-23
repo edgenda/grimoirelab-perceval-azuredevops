@@ -1,0 +1,49 @@
+[tool.poetry]
+name = "perceval-azuredevops"
+version = "0.1.1"
+description = "Bundle of Perceval backends for Azure Devops."
+authors = [
+    "GrimoireLab Developers"
+]
+license = "GPL-3.0+"
+
+readme = "README.md"
+
+homepage = "https://edgenda.com/"
+repository = "https://github.com/edgenda/grimoirelab-perceval-azuredevops"
+
+keywords = [
+    "development",
+    "grimoirelab"
+]
+
+packages = [
+    { include = "perceval" },
+    { include = "tests", format = "sdist" },
+]
+
+classifiers = [
+   "Development Status :: 4 - Beta",
+   "Intended Audience :: Developers",
+   "Intended Audience :: Science/Research",
+   "Topic :: Software Development",
+   "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
+   "Programming Language :: Python :: 3"
+]
+
+[tool.poetry.urls]
+"Bug Tracker" = "https://github.com/edgenda/grimoirelab-perceval-azuredevops/issues"
+
+[tool.poetry.dependencies]
+python = "^3.6"
+
+requests = "^2.7.0"
+grimoirelab-toolkit = "^0.2"
+perceval = "^0.17.4"
+
+[tool.poetry.dev-dependencies]
+httpretty = "1.0.2"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
