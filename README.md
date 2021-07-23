@@ -1,6 +1,7 @@
 # perceval-azuredevops 
 
 Bundle of Perceval backends for Azure Devops.
+This bundle is inspired from https://github.com/chaoss/grimoirelab-perceval-weblate. For more information on GrimoireLab project, go check https://chaoss.github.io
 
 ## Backends
 
